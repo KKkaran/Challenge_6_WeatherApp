@@ -1,0 +1,12 @@
+.dashboard {
+  background: linear-gradient(to left, rgb(129, 129, 241), darkblue);
+}
+.results {
+  flex: 5;
+}
+.searchMenu {
+  flex: 1;
+}
+.searchheading > input {
+  margin-bottom: 0;
+}
