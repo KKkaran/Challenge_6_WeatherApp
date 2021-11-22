@@ -3,6 +3,7 @@ var city;
 var listCity = []
 var uvindex;
 var f;
+var citybtn;
 //make api call from lat,lon to get the result
 function getWeather(lat,lon){
    fetch("https://api.openweathermap.org/data/2.5/onecall?lat=" +lat + "&lon=" + lon + "&units=imperial&APPID=" + apiId)
@@ -14,9 +15,10 @@ function getWeather(lat,lon){
 }
 //this will create dynamic current day specs
 function updateCurrentDayEl(res){
+    console.log("city btn is : " + citybtn)
     uvindex = res.current.uvi
     $(".currentDay").addClass("border border-dark")
-    $(".currentDayHeading h2").html(`${city.val().toUpperCase()} (${moment().format("DD/MM/YYYY")})`)
+    $(".currentDayHeading h2").html(`${citybtn.toUpperCase()} (${moment().format("DD/MM/YYYY")})`)
     var specs = {
         "Temp" : res.current.temp + "°F", 
         "Wind" : res.current.wind_speed + " MPH", 
@@ -47,7 +49,7 @@ function updateCurrentDayEl(res){
     }
     //dynamically changing the color of uv index depending on the value
     $(".UVstyle span").css("background", color)
-    city.val("")
+    $("#city").val("")
     addCityNames();
     updateForecastMenu(res);
 }
@@ -102,9 +104,9 @@ function addCityNames(){
               .addClass("cityList mt-4 border-top")
 
     listCity.forEach((el) => {
-        var cityNames = $("<a>")
-                        .addClass("h3 mx-auto d-block")
-                        .attr("href","https://google.com")
+        var cityNames = $("<p>")
+                        .addClass("h3 mx-auto d-block cityname")
+                        //.attr("href","https://google.com")
                         .html(el)
     
         div.append(cityNames)
@@ -116,6 +118,7 @@ function addCityNames(){
 //make an api call to get lat, lon from the city name
 function getLatLon(city){
     console.log(listCity)
+    console.log(city)
     fetch("https://api.openweathermap.org/data/2.5/weather?q=" + city + "&APPID=" + apiId)
     .then(function(response){
         if(response.ok){
@@ -134,13 +137,17 @@ function getLatLon(city){
 }
 $("#submitCity").on("click", function(e){
     e.preventDefault()
-    city = $("#city")
-    if(!city.val()){
+    citybtn = $("#city").val()
+    if(!citybtn){
         console.log("empty city name")
         return;
     }
-    getLatLon(city.val())
+    getLatLon(citybtn)
     
+})
+$(".searchMenu").on("click", "p", function(){
+    citybtn = $(this).html()
+    getLatLon($(this).html())
 })
 $("#submitCity").val("Search")
 

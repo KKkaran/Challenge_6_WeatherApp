@@ -21,7 +21,7 @@ input {
 .cityList {
   padding: 10px;
 }
-.cityList a {
+.cityList p {
   text-align: center;
   background: grey;
   padding: 5px;
