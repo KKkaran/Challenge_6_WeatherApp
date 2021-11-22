@@ -47,6 +47,11 @@ function updateCurrentDayEl(res){
     $(".UVstyle span").css("background", color)
     city.val("")
     addCityNames();
+    updateForecastMenu(res);
+}
+//forcast menu
+function updateForecastMenu(res){
+    console.log(res)
 }
 //adding city names to the list beneath the search Menu
 function addCityNames(){
