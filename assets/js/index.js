@@ -16,7 +16,7 @@ function getWeather(lat,lon){
 function updateCurrentDayEl(res){
     uvindex = res.current.uvi
     $(".currentDay").addClass("border border-dark")
-    $(".currentDayHeading h2").html(`${city.val()} (${moment().format("DD/MM/YYYY")})`)
+    $(".currentDayHeading h2").html(`${city.val().toUpperCase()} (${moment().format("DD/MM/YYYY")})`)
     var specs = {
         "Temp" : res.current.temp + "°F", 
         "Wind" : res.current.wind_speed + " MPH", 
@@ -115,11 +115,16 @@ function addCityNames(){
 }
 //make an api call to get lat, lon from the city name
 function getLatLon(city){
+    console.log(listCity)
     fetch("https://api.openweathermap.org/data/2.5/weather?q=" + city + "&APPID=" + apiId)
     .then(function(response){
         if(response.ok){
             response.json().then(function(res){
                 getWeather(res.coord.lat,res.coord.lon)
+                if(listCity.includes(city.toUpperCase())){
+                    return
+                }
+                listCity.push(city.toUpperCase())
             })
         }else{
             alert("No city found by the name: " + city)
@@ -135,7 +140,7 @@ $("#submitCity").on("click", function(e){
         return;
     }
     getLatLon(city.val())
-    listCity.push(city.val())
+    
 })
 $("#submitCity").val("Search")
 
