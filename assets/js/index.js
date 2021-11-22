@@ -137,7 +137,8 @@ function getLatLon(city){
 }
 $("#submitCity").on("click", function(e){
     e.preventDefault()
-    citybtn = $("#city").val()
+    citybtn = $("#city").val().trim()
+    console.log(citybtn)
     if(!citybtn){
         console.log("empty city name")
         return;
