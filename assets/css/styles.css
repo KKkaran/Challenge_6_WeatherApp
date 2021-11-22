@@ -7,6 +7,24 @@
 .searchMenu {
   flex: 1;
 }
+input {
+  border: none;
+  border: 1px solid black;
+  border-radius: 10px;
+}
 .searchheading > input {
   margin-bottom: 0;
+}
+.liItems {
+  list-style: none;
+}
+.cityList {
+  padding: 10px;
+}
+.cityList a {
+  text-align: center;
+  background: grey;
+  padding: 5px;
+  color: black;
+  border-radius: 4px;
 }
