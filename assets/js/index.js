@@ -1,8 +1,7 @@
-//API-KEY  -------->>> 19881ccddec89e1f1d5f5979ebc7fa0a
-//this will make api call and get the result
 var apiId = "19881ccddec89e1f1d5f5979ebc7fa0a"
 var city;
 var listCity = []
+var uvindex;
 //make api call from lat,lon to get the result
 function getWeather(lat,lon){
    fetch("https://api.openweathermap.org/data/2.5/onecall?lat=" +lat + "&lon=" + lon + "&units=imperial&APPID=" + apiId)
@@ -14,34 +13,38 @@ function getWeather(lat,lon){
 }
 //this will create dynamic current day specs
 function updateCurrentDayEl(res){
-
+    uvindex = res.current.uvi
     $(".currentDayHeading h2").html(`${city.val()} (${moment().format("DD/MM/YYYY")})`)
-    console.log(`Temp: ${res.current.temp}` )
-    console.log(`Wind: ${res.current.wind_speed}` )
-    console.log(`Humidity: ${res.current.humidity}` )
-    console.log(`UV index: ${res.current.uvi}` )
     var specs = {
-        "Temp" : res.current.temp, 
-        "Wind" : res.current.wind_speed, 
-        "Humidity" : res.current.humidity,
-        "UV index" : res.current.uvi
+        "Temp" : res.current.temp + "°F", 
+        "Wind" : res.current.wind_speed + " MPH", 
+        "Humidity" : res.current.humidity + " %",
+        "UV index" : uvindex
     }
-    
-    var specsContainer = $("<div>")
-                        .addClass("currentDaySpecs")
-    
     var liELCoantainer = $("<ul>")
                         .addClass("specsUl p-0")
-
     for(let v=0;v<4;v++){
         var li = $("<li>")
-                 .addClass("liEl liItems h3")
-                 .html( `${Object.keys(specs)[v]} : ${Object.values(specs)[v]}`)
+                 .addClass("liItems h3")
+                 .html( `${Object.keys(specs)[v]} : <span> ${Object.values(specs)[v]} </span>`)
         liELCoantainer.append(li)
     }
-
     //specsContainer.append(liELCoantainer)
-    $(".currentDay ul").replaceWith(liELCoantainer)
+    $(".currentDaySpecs ul").replaceWith(liELCoantainer)
+    $(".specsUl").find("li").eq(3).addClass("UVstyle")
+    var color;
+    if(uvindex <= 2){
+        color = "green"
+    }else if(uvindex <= 4){
+        color = "yellow"
+        $(".UVstyle span").css("color", "black")
+    }else if(uvindex <= 6){
+        color = "orange"
+    }else{
+        color = "red"
+    }
+    //dynamically changing the color of uv index depending on the value
+    $(".UVstyle span").css("background", color)
     city.val("")
     addCityNames();
 }
@@ -64,10 +67,8 @@ function addCityNames(){
     
 
 }
-
 //make an api call to get lat, lon from the city name
 function getLatLon(city){
-
     fetch("https://api.openweathermap.org/data/2.5/weather?q=" + city + "&APPID=" + apiId)
     .then(function(response){
         if(response.ok){
@@ -80,11 +81,9 @@ function getLatLon(city){
         }
     })
 }
-
 $("#submitCity").on("click", function(e){
     e.preventDefault()
     city = $("#city")
-    
     if(!city.val()){
         console.log("empty city name")
         return;
@@ -92,10 +91,4 @@ $("#submitCity").on("click", function(e){
     getLatLon(city.val())
     listCity.push(city.val())
 })
-
-
-
-
-
-
 $("#submitCity").val("Search")

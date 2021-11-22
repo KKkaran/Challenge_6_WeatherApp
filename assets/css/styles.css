@@ -28,3 +28,8 @@ input {
   color: black;
   border-radius: 4px;
 }
+.UVstyle span {
+  padding: 0 25px 0 25px;
+  border-radius: 7px;
+  color: white;
+}
