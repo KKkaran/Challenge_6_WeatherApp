@@ -2,6 +2,7 @@ var apiId = "19881ccddec89e1f1d5f5979ebc7fa0a"
 var city;
 var listCity = []
 var uvindex;
+var f;
 //make api call from lat,lon to get the result
 function getWeather(lat,lon){
    fetch("https://api.openweathermap.org/data/2.5/onecall?lat=" +lat + "&lon=" + lon + "&units=imperial&APPID=" + apiId)
@@ -14,6 +15,7 @@ function getWeather(lat,lon){
 //this will create dynamic current day specs
 function updateCurrentDayEl(res){
     uvindex = res.current.uvi
+    $(".currentDay").addClass("border border-dark")
     $(".currentDayHeading h2").html(`${city.val()} (${moment().format("DD/MM/YYYY")})`)
     var specs = {
         "Temp" : res.current.temp + "°F", 
@@ -51,8 +53,47 @@ function updateCurrentDayEl(res){
 }
 //forcast menu
 function updateForecastMenu(res){
-    console.log(res)
+
+    
+
+    updatingDates(res);
+    
 }
+function updatingDates(res){
+    f = res
+    $(".forecastHeading").addClass("h1").html("5-Day Forecast:")
+    var datesContainer = $("<div>")
+                        .addClass("row justify-content-start")
+    
+    for(var t=1;t<6;t++){
+        var dtObj = new Date(res.daily[t].dt * 1000)
+        var month = dtObj.getMonth() + 1
+        var day = dtObj.getDate()
+        var year = dtObj.getFullYear()
+
+        var date = $("<div>")
+                    .addClass("col-8 col-md-5 col-xl-2 m-2 bg-dark text-light justify-content-between")
+        var dateHeading = $("<h3>")
+                    .addClass("")
+                    .html(`${month}/${day}/${year}`)
+        var pTemp = $("<p>")
+                .addClass("")
+                .html(`Temp : ${res.daily[t].temp.day} °F `)
+        var pWind = $("<p>")
+                .addClass("")
+                .html(`Wind : ${res.daily[t].wind_speed} MPH`)
+        var pHumidity = $("<p>")
+                .addClass("")
+                .html(`Humidity : ${res.daily[t].humidity} %`)
+
+
+        date.append(dateHeading,pTemp,pWind,pHumidity)
+        datesContainer.append(date)
+        console.log(month,day,year)
+    }
+    $(".forecaseDays div").replaceWith(datesContainer)
+}
+
 //adding city names to the list beneath the search Menu
 function addCityNames(){
 
@@ -97,3 +138,4 @@ $("#submitCity").on("click", function(e){
     listCity.push(city.val())
 })
 $("#submitCity").val("Search")
+
