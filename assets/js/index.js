@@ -13,7 +13,7 @@ function getWeather(lat,lon){
         updateCurrentDayEl(res)
    })
 }
-//this will create dynamic current day specs
+//this will create dynamic current day specssssss
 function updateCurrentDayEl(res){
     console.log("city btn is : " + citybtn)
     uvindex = res.current.uvi
