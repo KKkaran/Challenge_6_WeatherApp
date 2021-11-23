@@ -95,7 +95,14 @@ function updatingDates(res){
     }
     $(".forecaseDays div").replaceWith(datesContainer)
 }
+//every time a city is searched it is put into the local storage
+function saveLocalStorage(){
 
+}
+//every time the site is refreshed the cities are extracted from the local storage
+function loadLocalStorage(){
+    
+}
 //adding city names to the list beneath the search Menu
 function addCityNames(){
 
@@ -103,17 +110,15 @@ function addCityNames(){
     var div = $("<div>")
               .addClass("cityList mt-4 border-top")
 
-    listCity.forEach((el) => {
+    for(var i=listCity.length-1;i>=0;i--){
+
         var cityNames = $("<p>")
                         .addClass("h3 mx-auto d-block cityname")
                         //.attr("href","https://google.com")
-                        .html(el)
-    
+                        .html(listCity[i])
         div.append(cityNames)
         $(".cityList").replaceWith(div)
-    })
-    
-
+    }
 }
 //make an api call to get lat, lon from the city name
 function getLatLon(city){
@@ -128,6 +133,10 @@ function getLatLon(city){
                     return
                 }
                 listCity.push(city.toUpperCase())
+                if(listCity.length === 7){
+                    listCity.shift()//take the least recent out of the list
+                }
+                
             })
         }else{
             alert("No city found by the name: " + city)
@@ -135,6 +144,7 @@ function getLatLon(city){
         }
     })
 }
+//when user types in the city and hits the search button 
 $("#submitCity").on("click", function(e){
     e.preventDefault()
     citybtn = $("#city").val().trim()
@@ -146,6 +156,7 @@ $("#submitCity").on("click", function(e){
     getLatLon(citybtn)
     
 })
+//clicking on the already seen cities displays the weather of the city clicked
 $(".searchMenu").on("click", "p", function(){
     citybtn = $(this).html()
     getLatLon($(this).html())

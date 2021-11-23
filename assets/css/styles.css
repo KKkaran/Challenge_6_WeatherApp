@@ -28,10 +28,12 @@ input {
   color: black;
   border-radius: 4px;
 }
+.cityList p:hover {
+  background-color: wheat;
+  cursor: pointer;
+}
 .UVstyle span {
   padding: 0 25px 0 25px;
   border-radius: 7px;
   color: white;
-}
-.forecaseDays div div {
 }
