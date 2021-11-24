@@ -148,10 +148,16 @@ function getLatLon(city){
                 
             })
         }else{
-            alert("No city found by the name: " + city)
+            //console.log("No city found by the name: " + city)
+            showNoCityFound()
             return;
         }
     })
+}
+//No city found modal display..
+function showNoCityFound(){
+    console.log("no city found")
+    $('#exampleModal').css("display","block");
 }
 //when user types in the city and hits the search button 
 $("#submitCity").on("click", function(e){
@@ -172,4 +178,4 @@ $(".searchMenu").on("click", "p", function(){
 })
 $("#submitCity").val("Search")
 
-loadLocalStorage()
+loadLocalStorage()//runs on page reload..
