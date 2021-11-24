@@ -110,6 +110,8 @@ function loadLocalStorage(){
     listCity = JSON.parse(cityies)
     console.log("loading from local db, " + listCity)
     addCityNames()
+    citybtn = listCity[listCity.length-1]
+    getLatLon(listCity[listCity.length-1])
 }
 //adding city names to the list beneath the search Menu
 function addCityNames(){
@@ -179,3 +181,4 @@ $(".searchMenu").on("click", "p", function(){
 $("#submitCity").val("Search")
 
 loadLocalStorage()//runs on page reload..
+console.log(listCity[listCity.length-1])
