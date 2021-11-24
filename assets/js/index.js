@@ -97,11 +97,19 @@ function updatingDates(res){
 }
 //every time a city is searched it is put into the local storage
 function saveLocalStorage(){
-
+    console.log("saved locally...")
+    localStorage.setItem("weather",JSON.stringify(listCity))
 }
 //every time the site is refreshed the cities are extracted from the local storage
 function loadLocalStorage(){
-    
+
+    var cityies = localStorage.getItem("weather")
+    if(!cityies){
+        return
+    }
+    listCity = JSON.parse(cityies)
+    console.log("loading from local db, " + listCity)
+    addCityNames()
 }
 //adding city names to the list beneath the search Menu
 function addCityNames(){
@@ -136,6 +144,7 @@ function getLatLon(city){
                 if(listCity.length === 7){
                     listCity.shift()//take the least recent out of the list
                 }
+                saveLocalStorage();
                 
             })
         }else{
@@ -163,3 +172,4 @@ $(".searchMenu").on("click", "p", function(){
 })
 $("#submitCity").val("Search")
 
+loadLocalStorage()
