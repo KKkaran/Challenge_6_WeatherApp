@@ -4,6 +4,7 @@ var listCity = []
 var uvindex;
 var f;
 var citybtn;
+var cityClicked
 //make api call from lat,lon to get the result
 function getWeather(lat,lon){
    fetch("https://api.openweathermap.org/data/2.5/onecall?lat=" +lat + "&lon=" + lon + "&units=imperial&APPID=" + apiId)
@@ -50,16 +51,12 @@ function updateCurrentDayEl(res){
     //dynamically changing the color of uv index depending on the value
     $(".UVstyle span").css("background", color)
     $("#city").val("")
-    addCityNames();
+    addCityNames(citybtn.toUpperCase());
     updateForecastMenu(res);
 }
 //forcast menu
 function updateForecastMenu(res){
-
-    
-
     updatingDates(res);
-    
 }
 function updatingDates(res){
     f = res
@@ -109,22 +106,26 @@ function loadLocalStorage(){
     }
     listCity = JSON.parse(cityies)
     console.log("loading from local db, " + listCity)
-    addCityNames()
+    addCityNames(citybtn)
     citybtn = listCity[listCity.length-1]
     getLatLon(listCity[listCity.length-1])
 }
 //adding city names to the list beneath the search Menu
-function addCityNames(){
+function addCityNames(cityname){
 
-
+    var color;
     var div = $("<div>")
               .addClass("cityList mt-4 border-top")
 
     for(var i=listCity.length-1;i>=0;i--){
-
+        if(listCity[i] === cityname){
+            color = "green"
+        }else{
+            color = "grey"
+        }
         var cityNames = $("<p>")
                         .addClass("h3 mx-auto d-block cityname")
-                        //.attr("href","https://google.com")
+                        .css("background",color)
                         .html(listCity[i])
         div.append(cityNames)
         $(".cityList").replaceWith(div)
