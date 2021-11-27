@@ -40,5 +40,6 @@ input {
 .dates {
   background: linear-gradient(rgb(185, 176, 176), white);
 }
-.currentDay {
+.dates p {
+  font-size: 20px;
 }

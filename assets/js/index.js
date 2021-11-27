@@ -183,7 +183,9 @@ function getLatLon(city){
 //No city found modal display..
 function showNoCityFound(){
     console.log("no city found")
-    $('#exampleModal').css("display","block");
+    alert("No city found by that name. Try again!!")
+    $("#city").val("")
+    //$('#exampleModal').css("display","block");
 }
 //when user types in the city and hits the search button 
 $("#submitCity").on("click", function(e){
