@@ -37,3 +37,9 @@ input {
   border-radius: 7px;
   color: white;
 }
+.dates {
+  background: linear-gradient(rgb(185, 176, 176), white);
+}
+.dates p {
+  font-size: 20px;
+}

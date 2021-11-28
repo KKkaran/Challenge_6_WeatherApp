@@ -5,21 +5,38 @@ var uvindex;
 var f;
 var citybtn;
 var cityClicked
+var imageWeather = ""
+ //res.current.weather[0].icon
 //make api call from lat,lon to get the result
 function getWeather(lat,lon){
    fetch("https://api.openweathermap.org/data/2.5/onecall?lat=" +lat + "&lon=" + lon + "&units=imperial&APPID=" + apiId)
    .then(function(response){
        return response.json()
    }).then(function(res){
-        updateCurrentDayEl(res)
+       console.log(res.current.weather[0].icon)
+       imageWeather = res.current.weather[0].icon
+       console.log(imageWeather)
+       var image_link = `https://openweathermap.org/img/wn/${imageWeather}@2x.png`
+       console.log(image_link)
+       //console.log(res.current.weather[0].description)
+       updateCurrentDayEl(res)
    })
 }
 //this will create dynamic current day specssssss
 function updateCurrentDayEl(res){
-    console.log("city btn is : " + citybtn)
+    //console.log("city btn is : " + citybtn)
     uvindex = res.current.uvi
-    $(".currentDay").addClass("border border-dark")
+    $(".currentDay").addClass("")
+    var img = $("<img>").attr({"src":`https://openweathermap.org/img/wn/${imageWeather}@2x.png`,
+                                "alt" : "icon of the weather",
+                                "width" :"50","height": "50"})
+    
     $(".currentDayHeading h2").html(`${citybtn.toUpperCase()} (${moment().format("DD/MM/YYYY")})`)
+    $(".currentDayHeading h2").append(img)
+    $(".currentDay").css({"background": "linear-gradient(rgb(245, 224, 224), white)"},{"padding":"7px"})
+
+    //padding: 7px;
+  //background: linear-gradient(rgb(245, 224, 224), white);
     var specs = {
         "Temp" : res.current.temp + "°F", 
         "Wind" : res.current.wind_speed + " MPH", 
@@ -60,24 +77,29 @@ function updateForecastMenu(res){
 }
 function updatingDates(res){
     f = res
+    console.log(res)
     $(".forecastHeading").addClass("h1").html("5-Day Forecast:")
     var datesContainer = $("<div>")
                         .addClass("row justify-content-start")
     
     for(var t=1;t<6;t++){
         var dtObj = new Date(res.daily[t].dt * 1000)
+        imageWeather = res.daily[t].weather[0].icon
         var month = dtObj.getMonth() + 1
         var day = dtObj.getDate()
         var year = dtObj.getFullYear()
 
         var date = $("<div>")
-                    .addClass("col-8 col-md-5 col-xl-2 m-2 bg-dark text-light justify-content-between")
+                    .addClass("col-8 col-md-5 col-xl-2 m-2 justify-content-between dates")
         var dateHeading = $("<h3>")
                     .addClass("")
                     .html(`${month}/${day}/${year}`)
         var pTemp = $("<p>")
                 .addClass("")
                 .html(`Temp : ${res.daily[t].temp.day} °F `)
+        var img = $("<img>").attr({"src":`https://openweathermap.org/img/wn/${imageWeather}@2x.png`,
+                "alt" : "icon of the weather",
+                "width" :"50","height": "50"})        
         var pWind = $("<p>")
                 .addClass("")
                 .html(`Wind : ${res.daily[t].wind_speed} MPH`)
@@ -86,9 +108,9 @@ function updatingDates(res){
                 .html(`Humidity : ${res.daily[t].humidity} %`)
 
 
-        date.append(dateHeading,pTemp,pWind,pHumidity)
+        date.append(dateHeading,pTemp,img,pWind,pHumidity)
         datesContainer.append(date)
-        console.log(month,day,year)
+        //console.log(month,day,year)
     }
     $(".forecaseDays div").replaceWith(datesContainer)
 }
@@ -105,7 +127,7 @@ function loadLocalStorage(){
         return
     }
     listCity = JSON.parse(cityies)
-    console.log("loading from local db, " + listCity)
+    //console.log("loading from local db, " + listCity)
     addCityNames(citybtn)
     citybtn = listCity[listCity.length-1]
     getLatLon(listCity[listCity.length-1])
@@ -115,7 +137,8 @@ function addCityNames(cityname){
 
     var color;
     var div = $("<div>")
-              .addClass("cityList mt-4 border-top")
+              .css("border-top","3px solid grey")   
+              .addClass("cityList mt-4")
 
     for(var i=listCity.length-1;i>=0;i--){
         if(listCity[i] === cityname){
@@ -125,7 +148,7 @@ function addCityNames(cityname){
         }
         var cityNames = $("<p>")
                         .addClass("h3 mx-auto d-block cityname")
-                        .css("background",color)
+                        .css("background",`linear-gradient(${color}, lightgrey)`)
                         .html(listCity[i])
         div.append(cityNames)
         $(".cityList").replaceWith(div)
@@ -134,7 +157,7 @@ function addCityNames(cityname){
 //make an api call to get lat, lon from the city name
 function getLatLon(city){
     console.log(listCity)
-    console.log(city)
+   // console.log(city)
     fetch("https://api.openweathermap.org/data/2.5/weather?q=" + city + "&APPID=" + apiId)
     .then(function(response){
         if(response.ok){
@@ -160,7 +183,9 @@ function getLatLon(city){
 //No city found modal display..
 function showNoCityFound(){
     console.log("no city found")
-    $('#exampleModal').css("display","block");
+    alert("No city found by that name. Try again!!")
+    $("#city").val("")
+    //$('#exampleModal').css("display","block");
 }
 //when user types in the city and hits the search button 
 $("#submitCity").on("click", function(e){
@@ -182,4 +207,3 @@ $(".searchMenu").on("click", "p", function(){
 $("#submitCity").val("Search")
 
 loadLocalStorage()//runs on page reload..
-console.log(listCity[listCity.length-1])
